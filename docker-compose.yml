@@ -15,7 +15,7 @@ services:
     depends_on:
       - reverseproxy
     build:
-      context: ./HelloAspNetCore3.Api
+      context: ./HelloAspNetCore6.Api
       dockerfile: Api.Dockerfile
     expose:
       - "5000"

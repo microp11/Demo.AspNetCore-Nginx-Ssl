@@ -1,19 +1,20 @@
-# ASP.NET Core 3.0 Web API with Nginx Reverse Proxy for SSL
+# Original ASP.NET Core 3.0 Web API with Nginx Reverse Proxy for SSL
+# updated to .NET core 6.0
 
 ## Prerequisites
 
 - [Docker Desktop](https://www.docker.com/products/docker-desktop)
-- .NET Core SDK version 3.0 or greater
+- .NET Core SDK version 6.0 or greater
 
 ## Web API Application
 
 - Create a new Web API application.
 
 ```
-mkdir HelloAspNetCore3 && cd HelloAspNetCore3
-dotnet new sln --name HelloAspNetCore3
-dotnet new webapi --name HelloAspNetCore3.Api
-dotnet sln add HelloAspNetCore3.Api/HelloAspNetCore3.Api.csproj
+mkdir HelloAspNetCore6 && cd HelloAspNetCore6
+dotnet new sln --name HelloAspNetCore6
+dotnet new webapi --name HelloAspNetCore6.Api
+dotnet sln add HelloAspNetCore3.Api/HelloAspNetCore6.Api.csproj
 ```
 
 - Insert the following code in the `Configure` method of `Startup`, after `app.UseDeveloperExceptionPage`.
@@ -30,32 +31,36 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 - Add **Api.Dockerfile** to the Web API project.
 
 ```docker
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.0-alpine AS base
-WORKDIR /app
+#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/core/sdk:3.0-alpine AS build
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+WORKDIR /app
+EXPOSE 80
+EXPOSE 443
+
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["HelloAspNetCore3.Api.csproj", "./"]
-RUN dotnet restore "./HelloAspNetCore3.Api.csproj"
+COPY ["HelloAspNetCore6.Api.csproj", "./"]
+RUN dotnet restore "./HelloAspNetCore6.Api.csproj"
 COPY . .
 WORKDIR "/src/."
-RUN dotnet build "HelloAspNetCore3.Api.csproj" -c Release -o /app/build
+RUN dotnet build "HelloAspNetCore6.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "HelloAspNetCore3.Api.csproj" -c Release -o /app/publish
+RUN dotnet publish "HelloAspNetCore6.Api.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENV ASPNETCORE_URLS http://*:5000
-ENTRYPOINT ["dotnet", "HelloAspNetCore3.Api.dll"]
+ENTRYPOINT ["dotnet", "HelloAspNetCore6.Api.dll"]
 ```
 
 - Open terminal at Web API project folder, build then run the container image.
 
 ```
-docker build -t hello-aspnetcore3 -f Api.Dockerfile .
-docker run -d -p 5000:5000 --name hello-aspnetcore3  hello-aspnetcore3
+docker build -t hello-aspnetcore6 -f Api.Dockerfile .
+docker run -d -p 5000:5000 --name hello-aspnetcore6  hello-aspnetcore6
 ```
 
 - Browse to: `http://localhost:5000/weatherforecast`
@@ -65,8 +70,8 @@ docker run -d -p 5000:5000 --name hello-aspnetcore3  hello-aspnetcore3
 - Stop and remove the container and image.
 
 ```
-docker rm -f hello-aspnetcore3
-docker rmi hello-aspnetcore3
+docker rm -f hello-aspnetcore6
+docker rmi hello-aspnetcore6
 ```
 
 ## Nginx Container
@@ -136,7 +141,7 @@ services:
     depends_on:
       - reverseproxy
     build:
-      context: ./HelloAspNetCore3.Api
+      context: ./HelloAspNetCore6.Api
       dockerfile: Api.Dockerfile
     expose:
       - "5000"
