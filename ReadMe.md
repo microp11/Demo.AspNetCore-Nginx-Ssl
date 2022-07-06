@@ -18,7 +18,8 @@ dotnet sln add HelloAspNetCore3.Api/HelloAspNetCore6.Api.csproj
 ```
 
 - Insert the following code in the `Configure` method of `Startup`, after `app.UseDeveloperExceptionPage`.  
-> **Note**: Not sure if the `UseForwardedHeaders` below is needed. Will work with or without. 
+> **Note**: Not sure if the `UseForwardedHeaders` below is needed. Will work with or without.
+> **Note**: Added to `Program.cs` though. 
 
 ```csharp
 app.UseForwardedHeaders(new ForwardedHeadersOptions
