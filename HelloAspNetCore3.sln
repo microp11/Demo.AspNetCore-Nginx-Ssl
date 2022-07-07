@@ -5,11 +5,15 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{322216D0-5DA8-4ECD-9337-F91D53C814D8}"
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.yml = docker-compose.yml
+		Nginx\localhost.conf = Nginx\localhost.conf
+		Nginx\localhost.crt = Nginx\localhost.crt
+		Nginx\localhost.key = Nginx\localhost.key
+		Nginx\nginx.conf = Nginx\nginx.conf
 		Nginx\Nginx.Dockerfile = Nginx\Nginx.Dockerfile
 		ReadMe.md = ReadMe.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloAspNetCore6.Api", "HelloAspNetCore6.Api\HelloAspNetCore6.Api.csproj", "{EE14FAEF-DBA3-42A5-9DF3-FF29CADA1E89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloAspNetCore6.Api", "HelloAspNetCore6.Api\HelloAspNetCore6.Api.csproj", "{EE14FAEF-DBA3-42A5-9DF3-FF29CADA1E89}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

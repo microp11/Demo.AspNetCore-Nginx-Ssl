@@ -11,7 +11,7 @@ services:
       - "443:443"
     restart: always
 
-  api:
+  api1:
     depends_on:
       - reverseproxy
     build:
@@ -19,6 +19,16 @@ services:
       dockerfile: Api.Dockerfile
     expose:
       - "5000"
+    restart: always
+ 
+  api2:
+    depends_on:
+        - reverseproxy
+    build:
+        context: ./HelloAspNetCore6.Api
+        dockerfile: Api.Dockerfile
+    expose:
+        - "5000"
     restart: always
 
 # docker-compose build
